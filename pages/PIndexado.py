@@ -6,6 +6,9 @@ st.set_page_config(page_title="Repositorio - UNACH", page_icon="Files/Logo.svg",
 
 
 def principal ():
+    # Load data from JSON file
+    with open("Data/Archivos.json", "r") as file:
+        data = json.load(file)
     
         
     # CSS personalizado para eliminar el padding de los contenedores
@@ -52,6 +55,23 @@ def principal ():
             )
     
     filtros= st.empty()
+    #logica dinámica para filtros.
+    AutoresUnicos=list(set(item["Autor"] for item in data))
+    AutoresUnicos.sort()
+    AutoresUnicos.insert(0,"Todos")
+
+    MateriasUnicas=list(set(item["Materia"] for item in data))
+    MateriasUnicas.sort()
+    MateriasUnicas.insert(0,"Todas")
+
+    AñosUnicos=list(set(item["Año"] for item in data))
+    AñosUnicos.sort(reverse=True)
+    AñosUnicos.insert(0,"Todos")
+
+    ExtensionesUnicas=list(set(item["Extensión"] for item in data))
+    ExtensionesUnicas.sort()
+    ExtensionesUnicas.insert(0,"Todos")
+
     with filtros.container():
         col0,col1=st.columns([0.3,1])
         with col0:
@@ -63,17 +83,14 @@ def principal ():
         with col1:
             col1,col2,col3,col4=st.columns([1,1,1,1])
             with col1:
-                st.selectbox("Autor",["Todos","3","2","1"])
+                FiltroAutor=st.selectbox("Autor",AutoresUnicos)
             with col2:
-                st.selectbox("Materia",["Todas","Análisis de vulnerabilidades","Seguridad en computo","Sistemas Operativos","Conmutadores y Redes Inalambricas","Inteligencia Artificial","Desarrollo de aplicaciones web y móviles"])
+                FiltroMateria=st.selectbox("Materia",MateriasUnicas)
             with col3:
-                st.selectbox("Año",["Todos","2023","2022","2021"])
+                FiltroAño=st.selectbox("Año",AñosUnicos)
             with col4:
-                st.selectbox("Extensión",["Todos","PDF","Video"])
-            
-            # Load data from JSON file
-            with open("Data/Archivos.json", "r") as file:
-                data = json.load(file)
+                FiltroExtensión=st.selectbox("Extensión",ExtensionesUnicas)
+
             def renderizar_caratula(ruta_pdf):
                 """Render the cover image of a PDF."""
                 try:
@@ -85,15 +102,37 @@ def principal ():
                 except Exception as e:
                     st.write("No se pudo cargar la carátula:", e)
                     return None
+            
+            DatosFiltrados=[
+                item for item in data
+                if(FiltroAutor=="Todos" or item["Autor"]==FiltroAutor)
+                and (FiltroMateria=="Todas" or item["Materia"]==FiltroMateria)
+                and (FiltroAño=="Todos" or item["Año"]==FiltroAño)
+                and (FiltroExtensión=="Todos" or item["Extensión"]==FiltroExtensión)
+            ]
 
+            #logica para la barra de busqueda
+            if queryDeBusqueda.strip():
+                DatosFiltrados = [
+                    item for item in DatosFiltrados
+                    if queryDeBusqueda.lower() in item["Titulo"].lower()
+                ]
+            else:
+                DatosFiltrados = [
+                    item for item in data
+                    if(FiltroAutor=="Todos" or item["Autor"]==FiltroAutor)
+                    and (FiltroMateria=="Todas" or item["Materia"]==FiltroMateria)
+                    and (FiltroAño=="Todos" or item["Año"]==FiltroAño)
+                    and (FiltroExtensión=="Todos" or item["Extensión"]==FiltroExtensión)]
+            
             contenedores = {}
-            for i in range(0, len(data), 2):  # Iterar cada dos recursos para generar filas
+            for i in range(0, len(DatosFiltrados), 2):  # Iterar cada dos recursos para generar filas
                 # Crear una fila con cuatro columnas
                 col1, col2, col3, col4 = st.columns(4)
 
                 # Primer recurso (si está disponible)
-                if i < len(data):
-                    recurso1 = data[i]
+                if i < len(DatosFiltrados):
+                    recurso1 = DatosFiltrados[i]
                     with col1:  # Portada del primer recurso
                         if recurso1["Extensión"].lower() == "pdf":
                             ruta_pdf1 = f"static/Libros/{recurso1['Titulo']}.pdf"
@@ -121,8 +160,8 @@ def principal ():
                             )
 
                 # Segundo recurso (si está disponible)
-                if i + 1 < len(data):
-                    recurso2 = data[i + 1]
+                if i + 1 < len(DatosFiltrados):
+                    recurso2 = DatosFiltrados[i + 1]
                     with col3:  # Portada del segundo recurso
                         if recurso2["Extensión"].lower() == "pdf":
                             ruta_pdf2 = f"static/Libros/{recurso2['Titulo']}.pdf"
@@ -150,30 +189,7 @@ def principal ():
                             )
 
         
-    #---------------------------------------------------------------
-
-
-
-
-    información=st.empty()
-    with información.container():
-        col1,col2=st.columns([0.3,1])
-
-
-
-    Info = st.empty()
-    with Info.container():
-        book = st.empty()
-        with book.container():
-            col1, col2 = st.columns([1.5, 1])
-
-
-            with col1:
-                colm1, colm2 = st.columns([1, 1])
-
-
-
-
+#---------------------------------------------------------------
 
 
 
