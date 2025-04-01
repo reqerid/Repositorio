@@ -4,7 +4,7 @@ import json
 import fitz # PyMuPDF
 st.set_page_config(page_title="Repositorio - UNACH", page_icon="Files/Logo.svg", layout="wide")
 
-
+#st.video("static/Videos/Análisis de Vulnerabilidades.mp4")
 def principal ():
     # Load data from JSON file
     with open("Data/Archivos.json", "r") as file:
@@ -77,7 +77,7 @@ def principal ():
         with col0:
             st.subheader("Novedades y Páginas oficiales", anchor="novedades")
             Imagenes = ["Files/Logo.png", "Files/Calendario.jpg", "Files/Eventos.jpg"]
-            indice = st.slider("", 0, len(Imagenes) - 1)
+            indice = st.slider("", 0, len(Imagenes) - 1,2)
             imagen = Image.open(Imagenes[indice])
             st.image(imagen, caption="", use_container_width=False, width=300)
         with col1:
@@ -139,25 +139,48 @@ def principal ():
                             caratula1 = renderizar_caratula(ruta_pdf1)
                             if caratula1:
                                 st.image(caratula1, caption="Carátula", use_container_width=True)
+                        #condicional para videos
+                        elif recurso1["Extensión"].strip().lower() == "mp4":
+                            ruta_video1 = f"static/Videos/{recurso1['Titulo']}.mp4"
+                            try:
+                                # Intenta reproducir el video desde la ruta generada
+                                st.video(ruta_video1)
+                            except Exception as e:
+                                # Si ocurre un error, intenta reproducirlo con otra fuente
+                                try:
+                                    st.video(recurso1["Url"])
+                                except Exception as fallback_error:
+                                    st.write(f"No se pudo cargar el video alternativo. Error: {fallback_error}")
+                        elif recurso1["Extensión"].strip().lower()=="mp3":
+                            ruta_audio1=f"static/Audios/{recurso1['Titulo']}.mp3"
+                            try:
+                                st.audio(ruta_audio1)
+                            except Exception as e:
+                                #si ocurre un error enviamos un mensaje de error
+                                st.write(f"No se pudo cargar el audio alternativo. Error: {e}")
+
 
                     with col2:  # Información del primer recurso
-                        st.write(recurso1["Titulo"])
-                        st.write(f"**Autor:** {recurso1['Autor']}")
-                        st.write(f"**Materia:** {recurso1['Materia']}")
-                        st.write(f"**Año:** {recurso1['Año']}")
-                        st.write(f"**Extensión:** {recurso1['Extensión']}")
                         if recurso1["Extensión"].lower() == "pdf":
                             st.markdown(
                                 f"""
                                 <a href="app/static/Libros/{recurso1['Titulo']}.pdf" target="_blank">
                                     <button style="background-color: #007bff; color: white; padding: 10px 20px; 
                                     border: none; border-radius: 5px; cursor: pointer;">
-                                        Abrir {recurso1['Titulo']}
+                                        Abrir
                                     </button>
                                 </a>
                                 """,
                                 unsafe_allow_html=True,
                             )
+                        st.write(recurso1["Titulo"])
+                        st.write(f"**Autor:** {recurso1['Autor']}")
+                        st.write(f"**Materia:** {recurso1['Materia']}")
+                        st.write(f"**Año:** {recurso1['Año']}")
+                        st.write(f"**Extensión:** {recurso1['Extensión']}")
+                        st.write(" ") #espacio
+
+
 
                 # Segundo recurso (si está disponible)
                 if i + 1 < len(DatosFiltrados):
@@ -168,25 +191,48 @@ def principal ():
                             caratula2 = renderizar_caratula(ruta_pdf2)
                             if caratula2:
                                 st.image(caratula2, caption="Carátula", use_container_width=True)
+                        elif recurso2["Extensión"].strip().lower() == "mp4":
+                            ruta_video1 = f"static/Videos/{recurso2['Titulo']}.mp4"
+                            try:
+                                # Intenta reproducir el video desde la ruta generada
+                                st.video(ruta_video1)
+                            except Exception as e:
+                                # Si ocurre un error, intenta reproducirlo con otra fuente
+                                try:
+                                    st.video(recurso2["Url"])
+                                except Exception as fallback_error:
+                                    st.write(f"No se pudo cargar el video alternativo. Error: {fallback_error}")
+                        elif recurso2["Extensión"].strip().lower()=="mp3":
+                            ruta_audio2=f"static/Audios/{recurso2['Titulo']}.mp3"
+                            try:
+                                st.audio(ruta_audio2)
+                            except Exception as e:
+                                #si ocurre un error enviamos un mensaje de error
+                                st.write(f"No se pudo cargar el audio alternativo. Error: {e}")
 
                     with col4:  # Información del segundo recurso
-                        st.write(recurso2["Titulo"])
-                        st.write(f"**Autor:** {recurso2['Autor']}")
-                        st.write(f"**Materia:** {recurso2['Materia']}")
-                        st.write(f"**Año:** {recurso2['Año']}")
-                        st.write(f"**Extensión:** {recurso2['Extensión']}")
                         if recurso2["Extensión"].lower() == "pdf":
+                            
                             st.markdown(
                                 f"""
                                 <a href="app/static/Libros/{recurso2['Titulo']}.pdf" target="_blank">
                                     <button style="background-color: #007bff; color: white; padding: 10px 20px; 
                                     border: none; border-radius: 5px; cursor: pointer;">
-                                        Abrir {recurso2['Titulo']}
+                                        Abrir
                                     </button>
                                 </a>
                                 """,
                                 unsafe_allow_html=True
                             )
+
+                        st.write(recurso2["Titulo"])
+                        st.write(f"**Autor:** {recurso2['Autor']}")
+                        st.write(f"**Materia:** {recurso2['Materia']}")
+                        st.write(f"**Año:** {recurso2['Año']}")
+                        st.write(f"**Extensión:** {recurso2['Extensión']}")
+                        st.write(" ") #espacio
+
+
 
         
 #---------------------------------------------------------------

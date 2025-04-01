@@ -22,7 +22,57 @@
      "Autor":"Raul Sergio Martín Torres",
      "Materia":"Análisis de Vulnerabilidades",
      "Año":"2022",
-     "Extensión":"PDF"}
+     "Extensión":"PDF"},
+
+     {"Titulo":"Análisis de Vulnerabilidades",
+    
+     "Autor":"Cloud Seguro",
+     "Materia":"Análisis de Vulnerabilidades",
+     "Año":"2021",
+     "Extensión":"MP4"},
+     {"Titulo":"Beneficios de llevar a cabo un análisis de vulnerabilidades",
+    
+     "Autor":"iDric",
+     "Materia":"Análisis de Vulnerabilidades",
+     "Año":"2023",
+     "Extensión":"MP4"},
+     {"Titulo":"E94 Beneficios de un Análisis de Vulnerabilidades",
+    
+     "Autor":"EASYSEC",
+     "Materia":"Análisis de Vulnerabilidades",
+     "Año":"2024",
+     "Extensión":"MP3"},
+     {"Titulo":"E76 Análisis de Vulnerabilidades y Pentest",
+    
+     "Autor":"EASYSEC",
+     "Materia":"Análisis de Vulnerabilidades",
+     "Año":"2024",
+     "Extensión":"MP3"},
+     {"Titulo":"desarollo web o desarrollo de software",
+    
+     "Autor":"HolaMundo",
+     "Materia":"Desarrollo De Aplicaciones Web y Móviles",
+     "Año":"2024",
+     "Extensión":"MP4"},
+     {"Titulo":"crear una app desde cero",
+    
+     "Autor":"munoncode",
+     "Materia":"Desarrollo De Aplicaciones Web y Móviles",
+     "Año":"2024",
+     "Extensión":"MP4"},
+
+    {"Titulo":"Podcast #11 - El concepto de abstracción en el desarrollo de software",
+    
+     "Autor":"hdeleon.net",
+     "Materia":"Desarrollo De Aplicaciones Web y Móviles",
+     "Año":"2019",
+     "Extensión":"MP3"},
+    {"Titulo":"VOY A ESTUDIAR DAW QUE NECESITO SABER",
+    
+     "Autor":"Carlos Azaustre Two",
+     "Materia":"Desarrollo De Aplicaciones Web y Móviles",
+     "Año":"2024",
+     "Extensión":"MP3"}
 
  
      

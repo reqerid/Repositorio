@@ -3,3 +3,10 @@ showSidebarNavigation = false
 
 [server]
 enableStaticServing = true
+
+[theme]
+primaryColor = "#00c8ff"  # Un azul vibrante para destacar elementos interactivos
+backgroundColor = "#121212"  # Negro puro para un verdadero tema oscuro
+secondaryBackgroundColor = "#1e1e1e"  # Un gris oscuro que complementa el fondo
+textColor = "#e0e0e0"  # Gris claro para un texto legible y suave
+  # Fuente moderna para un diseño tecnológico
