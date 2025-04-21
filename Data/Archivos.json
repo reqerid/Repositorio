@@ -72,8 +72,44 @@
      "Autor":"Carlos Azaustre Two",
      "Materia":"Desarrollo De Aplicaciones Web y Móviles",
      "Año":"2024",
+     "Extensión":"MP3"},
+    {"Titulo":"INCYTU 18-012",
+    
+     "Autor":"FFCyT",
+     "Materia":"Inteligencia Artificial",
+     "Año":"2018",
+     "Extensión":"PDF"},
+    {"Titulo":"101 cosas que debes saber hoy sobre nuestro futuro",
+    
+     "Autor":"Lasse Rouhiainen",
+     "Materia":"Inteligencia Artificial",
+     "Año":"2018",
+     "Extensión":"PDF"},
+     {"Titulo":"Qué es y cómo funciona la INTELIGENCIA ARTIFICIAL",
+    
+     "Autor":"Derivando",
+     "Materia":"Inteligencia Artificial",
+     "Año":"2022",
+     "Extensión":"MP4"},
+    {"Titulo":"Qué es realmente la inteligencia artificial",
+    
+     "Autor":"EDteam",
+     "Materia":"Inteligencia Artificial",
+     "Año":"2025",
+     "Extensión":"MP4"},
+     {"Titulo":"Llegará una INTELIGENCIA ARTIFICIAL a tener una conciencia DE VERDAD_ - Físico y filósofo debaten",
+    
+     "Autor":"The Wild Project",
+     "Materia":"Inteligencia Artificial",
+     "Año":"2024",
+     "Extensión":"MP3"},
+     {"Titulo":"Cómo Uso la Inteligencia Artificial en Mi Vida Diaria",
+    
+     "Autor":"Roberto Mtz",
+     "Materia":"Inteligencia Artificial",
+     "Año":"2025",
      "Extensión":"MP3"}
-
- 
-     
-]
+    
+    
+    
+    ]
