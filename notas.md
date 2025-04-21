@@ -6,6 +6,6 @@
 
 como la página se recarga cada que hay un cambio hay que intentar colocar un if condicionando la selección del listcheckbox
 
-*que la barra de busqueda devuelva un 404... y que mencione que es una barra de busqueda.
-*que devuelva las etiquetas cuando no se encuentran archivos bajo esas etiquetas
+*que la barra de busqueda devuelva un 404... y que mencione que es una barra de busqueda. (listo)
+*que devuelva las etiquetas cuando no se encuentran archivos bajo esas etiquetas (listo)
 *que los filtros se dinamicen entre si y voltear materia y autor.
