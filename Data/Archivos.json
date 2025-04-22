@@ -108,8 +108,141 @@
      "Autor":"Roberto Mtz",
      "Materia":"Inteligencia Artificial",
      "Año":"2025",
-     "Extensión":"MP3"}
+     "Extensión":"MP3"},
     
+    
+    
+    
+    
+        {
+            "Titulo": "Experto en Ciberseguridad nos explica cómo aprendió seguridad informática",
+            "Autor": "BettaTech",
+            "Materia": "Seguridad en computo",
+            "Año": "2024",
+            "Extensión": "MP3"
+        },
+    
+        {
+            "Titulo": "GuIa-seguridad-informática",
+            "Autor": "DGTI",
+            "Materia": "Seguridad en computo",
+            "Año": "2020",
+            "Extensión": "PDF"
+        },
+        {
+            "Titulo": "Ruta para empezar en la ciberseguridad",
+            "Autor": "EDteam",
+            "Materia": "Seguridad en computo",
+            "Año": "2023",
+            "Extensión": "MP4"
+        },
+        {
+            "Titulo": "Seguridad informatica",
+            "Autor": "PNUD-Colombia",
+            "Materia": "Seguridad en computo",
+            "Año": "2022",
+            "Extensión": "PDF"
+        },
+        {
+            "Titulo": "¿Por Qué la Gente Joven Destaca Tanto en Ciberseguridad",
+            "Autor": "Hackavis",
+            "Materia": "Seguridad en computo",
+            "Año": "2023",
+            "Extensión": "MP3"
+        },
+        {
+            "Titulo": "¿Qué es la SEGURIDAD INFORMÁTICA",
+            "Autor": "TodoCode",
+            "Materia": "Seguridad en computo",
+            "Año": "2024",
+            "Extensión": "MP4"
+        },
+        {
+            "Titulo": "Introducción a los sistemas operativos",
+            "Autor": "UNIVERSIDAD NACIONAL DEL SUR",
+            "Materia": "Sistemas Operativos",
+            "Año": "2022",
+            "Extensión": "PDF"
+        },
+        {
+            "Titulo": "Los SISTEMAS OPERATIVOS que fracasaron",
+            "Autor": "Tutos PC",
+            "Materia": "Sistemas Operativos",
+            "Año": "2023",
+            "Extensión": "MP4"
+        },
+        {
+            "Titulo": "Los sistemas operativos",
+            "Autor": "Profe Emir",
+            "Materia": "Sistemas Operativos",
+            "Año": "2019",
+            "Extensión": "MP3"
+        },
+        {
+            "Titulo": "Los sistemas Operativos",
+            "Autor": "L.I. Francisco Ruiz Sala",
+            "Materia": "Sistemas Operativos",
+            "Año": "2021",
+            "Extensión": "PDF"
+        },
+        {
+            "Titulo": "Microaprendizaje_ Qué es un sistema operativo_",
+            "Autor": "Educar Portal",
+            "Materia": "Sistemas Operativos",
+            "Año": "2022",
+            "Extensión": "MP3"
+        },
+        {
+            "Titulo": "SISTEMAS OPERATIVOS ¿Que son_¿Como Funcionan _ TIPOS de SISTEMAS OPERATIVOS ",
+            "Autor": "El Salón de Informática",
+            "Materia": "Sistemas Operativos",
+            "Año": "2021",
+            "Extensión": "MP4"
+        },
+
+        {
+            "Titulo": "Diferencias entre HUB, SWITCH y ROUTER explicado rápido y fácil!",
+            "Autor": "RedesCiber",
+            "Materia": "Conmutadores y Redes Innalámbricas",
+            "Año": "2023",
+            "Extensión": "MP4"
+        },
+    
+        {
+            "Titulo": "Introducción a las redes Innalámbricas",
+            "Autor": "UPP",
+            "Materia": "Conmutadores y Redes Innalámbricas",
+            "Año": "2023",
+            "Extensión": "PDF"
+        },
+        {
+            "Titulo": "Podcast - Diseño y componentes de las redes inalámbricas",
+            "Autor": "CommScope",
+            "Materia": "Conmutadores y Redes Innalámbricas",
+            "Año": "2022",
+            "Extensión": "MP3"
+        },
+        {
+            "Titulo": "Redes Innalámbricas",
+            "Autor": "Jordi Salazar",
+            "Materia": "Conmutadores y Redes Innalámbricas",
+            "Año": "2023",
+            "Extensión": "PDF"
+        },
+        {
+            "Titulo": "TekTalks Podcast Ep 1  Wifi 6 y Redes Wireless inteligentes",
+            "Autor": "Totaltek",
+            "Materia": "Conmutadores y Redes Innalámbricas",
+            "Año": "2023",
+            "Extensión": "MP3"
+        },
+        {
+            "Titulo": "¿Cómo funcionan las redes inalámbricas_",
+            "Autor": "Ecosistema de Recursos educativos",
+            "Materia": "Conmutadores y Redes Innalámbricas",
+            "Año": "2022",
+            "Extensión": "MP4"
+        }
     
     
     ]

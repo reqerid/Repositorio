@@ -5,7 +5,7 @@ import fitz  # PyMuPDF
 
 st.set_page_config(page_title="Repositorio - UNACH", page_icon="Files/Logo.svg", layout="centered")
 
-# Inyectar CSS para el input del campo de búsqueda (icono de lupa)
+# Inyectar CSS global para el icono de lupa y los mensajes de ayuda
 st.markdown(
     """
     <style>
@@ -15,6 +15,19 @@ st.markdown(
         background-position: 5px center;
         background-size: 20px;
         padding-left: 30px;
+    }
+    .help-message {
+        background-color: rgba(233, 236, 239, 0.85);
+        padding: 10px;
+        border-radius: 5px;
+        font-size: 0.9rem;
+        color: #333;
+        animation: fadeIn 1.5s ease-in-out;
+        margin-bottom: 10px;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
     }
     </style>
     """,
@@ -37,7 +50,7 @@ def menu_principal():
             img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
             return img
         except Exception as e:
-            st.write("No se pudo cargar la carátula:", e)
+            st.write(f"No se pudo cargar la carátula: {e}")
             return None
 
     # Mostrar logo centrado
@@ -47,45 +60,31 @@ def menu_principal():
         with col2:
             st.image("Files/Logo.svg", use_container_width=True)
 
-    # Inicializar variable de sesión para controlar la visibilidad del mensaje
+    # Inicializar variables de sesión para los mensajes de ayuda
     if "hide_search_help" not in st.session_state:
         st.session_state.hide_search_help = False
+    if "hide_button_help" not in st.session_state:
+        st.session_state.hide_button_help = False
 
-    # Contenedor para la barra de búsqueda y su mensaje instructivo
+    # Contenedor para la barra de búsqueda
     searchbarholder = st.empty()
     with searchbarholder.container():
         st.markdown("<br>", unsafe_allow_html=True)
         
-        # Mostrar mensaje instructivo con animación y transparencia
+        # Mensaje de ayuda para la barra de búsqueda
         if not st.session_state.hide_search_help:
             col_msg, col_close = st.columns([0.9, 0.1])
             with col_msg:
                 st.markdown(
-                    """
-                    <div class="help-message" style="
-                        background-color: rgba(233, 236, 239, 0.85);
-                        padding: 10px;
-                        border-radius: 5px;
-                        font-size: 0.9rem;
-                        color: #333;
-                        animation: fadeIn 1.5s ease-in-out;
-                        margin-bottom: 10px;">
-                        Aquí puedes realizar la búsqueda de tus archivos en el repositorio ingresando el título.
-                    </div>
-                    <style>
-                        @keyframes fadeIn {
-                            from { opacity: 0; }
-                            to { opacity: 1; }
-                        }
-                    </style>
-                    """,
+                    '<div class="help-message">Aquí puedes realizar la búsqueda de tus archivos en el repositorio ingresando el título.</div>',
                     unsafe_allow_html=True
                 )
             with col_close:
-                if st.button("✕", key="hide_help_button", help="Ocultar mensaje"):
+                if st.button("✕", key="hide_search_help_button", help="Ocultar mensaje"):
                     st.session_state.hide_search_help = True
+                    st.rerun()
 
-        # Barra de búsqueda con placeholder que ya incluye la imagen de lupa gracias al CSS inyectado
+        # Barra de búsqueda
         queryDeBusqueda = st.text_input(
             "",
             "",
@@ -104,10 +103,9 @@ def menu_principal():
                 st.error("No se encontró ningún archivo con ese título.")
             else:
                 for i in range(0, len(DatosFiltrados), 2):
-                    # Crear una fila con cuatro columnas para mostrar recursos
                     col1, col2, col3, col4 = st.columns(4)
 
-                    # Primer recurso (si está disponible)
+                    # Primer recurso
                     if i < len(DatosFiltrados):
                         recurso1 = DatosFiltrados[i]
                         with col1:
@@ -116,21 +114,21 @@ def menu_principal():
                                 caratula1 = renderizar_caratula(ruta_pdf1)
                                 if caratula1:
                                     st.image(caratula1, caption="Carátula", use_container_width=True)
-                            elif recurso1["Extensión"].strip().lower() == "mp4":
+                            elif recurso1["Extensión"].lower() == "mp4":
                                 ruta_video1 = f"static/Videos/{recurso1['Titulo']}.mp4"
                                 try:
                                     st.video(ruta_video1)
-                                except Exception as e:
+                                except Exception:
                                     try:
                                         st.video(recurso1["Url"])
                                     except Exception as fallback_error:
-                                        st.write(f"No se pudo cargar el video alternativo. Error: {fallback_error}")
-                            elif recurso1["Extensión"].strip().lower() == "mp3":
+                                        st.write(f"No se pudo cargar el video alternativo: {fallback_error}")
+                            elif recurso1["Extensión"].lower() == "mp3":
                                 ruta_audio1 = f"static/Audios/{recurso1['Titulo']}.mp3"
                                 try:
                                     st.audio(ruta_audio1)
                                 except Exception as e:
-                                    st.write(f"No se pudo cargar el audio alternativo. Error: {e}")
+                                    st.write(f"No se pudo cargar el audio alternativo: {e}")
                         with col2:
                             if recurso1["Extensión"].lower() == "pdf":
                                 st.markdown(
@@ -150,7 +148,8 @@ def menu_principal():
                             st.write(f"**Año:** {recurso1['Año']}")
                             st.write(f"**Extensión:** {recurso1['Extensión']}")
                             st.write(" ")
-                    # Segundo recurso (si está disponible)
+
+                    # Segundo recurso
                     if i + 1 < len(DatosFiltrados):
                         recurso2 = DatosFiltrados[i + 1]
                         with col3:
@@ -159,21 +158,21 @@ def menu_principal():
                                 caratula2 = renderizar_caratula(ruta_pdf2)
                                 if caratula2:
                                     st.image(caratula2, caption="Carátula", use_container_width=True)
-                            elif recurso2["Extensión"].strip().lower() == "mp4":
+                            elif recurso2["Extensión"].lower() == "mp4":
                                 ruta_video2 = f"static/Videos/{recurso2['Titulo']}.mp4"
                                 try:
                                     st.video(ruta_video2)
-                                except Exception as e:
+                                except Exception:
                                     try:
                                         st.video(recurso2["Url"])
                                     except Exception as fallback_error:
-                                        st.write(f"No se pudo cargar el video alternativo. Error: {fallback_error}")
-                            elif recurso2["Extensión"].strip().lower() == "mp3":
+                                        st.write(f"No se pudo cargar el video alternativo: {fallback_error}")
+                            elif recurso2["Extensión"].lower() == "mp3":
                                 ruta_audio2 = f"static/Audios/{recurso2['Titulo']}.mp3"
                                 try:
                                     st.audio(ruta_audio2)
                                 except Exception as e:
-                                    st.write(f"No se pudo cargar el audio alternativo. Error: {e}")
+                                    st.write(f"No se pudo cargar el audio alternativo: {e}")
                         with col4:
                             if recurso2["Extensión"].lower() == "pdf":
                                 st.markdown(
@@ -194,12 +193,25 @@ def menu_principal():
                             st.write(f"**Extensión:** {recurso2['Extensión']}")
                             st.write(" ")
 
+    # Contenedor para el botón "Todo" y mensaje de ayuda
     buttonHolder = st.empty()
     with buttonHolder.container():
         col1, col2, col3 = st.columns([1, 0.5, 1])
         with col2:
-            st.markdown("<br><br>", unsafe_allow_html=True)
+            st.markdown("<br>", unsafe_allow_html=True)
             if st.button("Todo", use_container_width=True, help="Ver la base de datos completa"):
                 st.switch_page("pages/PIndexado.py")
+        with col3:
+            if not st.session_state.hide_button_help:
+                col_msg, col_close = st.columns([0.9, 0.1])
+                with col_msg:
+                    st.markdown(
+                        '<div class="help-message">O si lo prefieres, puedes ver todo nuestro repositorio completo dando click.</div>',
+                        unsafe_allow_html=True
+                    )
+                with col_close:
+                    if st.button("✕", key="hide_button_help_button", help="Ocultar mensaje"):
+                        st.session_state.hide_button_help = True
+                        st.rerun()
 
 menu_principal()

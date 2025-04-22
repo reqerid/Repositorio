@@ -5,7 +5,6 @@ from modules.utils import mostrar_recurso
 
 st.set_page_config(page_title="Repositorio - UNACH", page_icon="Files/Logo.svg", layout="wide")
 
-
 # Inyectar CSS global para el icono de lupa en el input de búsqueda y para los mensajes de ayuda
 st.markdown(
     """
@@ -69,15 +68,17 @@ def mostrar_encabezado():
 
 def mostrar_controles_filtros(data):
     """
-    Muestra los filtros en una misma fila. El filtro de Materia es obligatorio y, si se mantiene en "Todas",
-    se muestra un mensaje de ayuda que indica que primero se debe elegir la materia para activar los demás filtros.
-    Además, se incluye una barra de búsqueda intuitiva (con un mensaje de ayuda y un icono en el input).
+    Muestra los filtros en una misma fila y los archivos paginados (6 por página).
+    Los filtros de Autor, Año y Extensión están deshabilitados hasta que se selecciona una materia distinta de 'Todas'.
+    Incluye botones de 'Anteriores' y 'Siguientes' para navegar y un contador de paginación.
     """
-    # Inicializar variables de sesión para ocultar mensajes de ayuda si el usuario lo decide
+    # Inicializar variables de sesión para ocultar mensajes de ayuda y la página actual
     if "hide_materia_help" not in st.session_state:
         st.session_state.hide_materia_help = False
     if "hide_search_help" not in st.session_state:
         st.session_state.hide_search_help = False
+    if 'pagina_actual' not in st.session_state:
+        st.session_state.pagina_actual = 1
     
     with st.container():
         # Dividir la pantalla en dos columnas: Izquierda para novedades y derecha para filtros y búsqueda.
@@ -100,11 +101,11 @@ def mostrar_controles_filtros(data):
             materias.insert(0, "Todas")
             filtro_materia = cols[0].selectbox("Materia", materias)
             
-            # Si se mantiene "Todas", los demás filtros se fijan a "Todos" y se muestra un mensaje de ayuda.
+            # Si se mantiene "Todas", los demás filtros se fijan a "Todos" y se deshabilitan.
             if filtro_materia == "Todas":
-                filtro_autor = cols[1].selectbox("Autor", ["Todos"])
-                filtro_año = cols[2].selectbox("Año", ["Todos"])
-                filtro_extension = cols[3].selectbox("Extensión", ["Todos"])
+                filtro_autor = cols[1].selectbox("Autor", ["Todos"], disabled=True)
+                filtro_año = cols[2].selectbox("Año", ["Todos"], disabled=True)
+                filtro_extension = cols[3].selectbox("Extensión", ["Todos"], disabled=True)
                 data_filtrada = data
                 # Mostrar mensaje de ayuda para elegir materia (si no se ha ocultado)
                 if not st.session_state.hide_materia_help:
@@ -114,25 +115,26 @@ def mostrar_controles_filtros(data):
                     with close_col:
                         if st.button("✕", key="hide_materia_help_button", help="Ocultar mensaje"):
                             st.session_state.hide_materia_help = True
+                            st.rerun()
             else:
-                # Si se selecciona una materia específica, se filtra la data
+                # Si se selecciona una materia específica, se filtra la data y se habilitan los filtros
                 data_materia = [item for item in data if item["Materia"] == filtro_materia]
                 # Filtro 2: Autor basado en la materia seleccionada.
                 autores_unicos = sorted(set(item["Autor"] for item in data_materia))
                 opciones_autor = ["Todos"] + autores_unicos if autores_unicos else ["Todos"]
-                filtro_autor = cols[1].selectbox("Autor", opciones_autor)
+                filtro_autor = cols[1].selectbox("Autor", opciones_autor, disabled=False)
                 data_materia_autor = [item for item in data_materia if item["Autor"] == filtro_autor] if filtro_autor != "Todos" else data_materia
                 
                 # Filtro 3: Año basado en los datos filtrados por Materia y Autor.
                 años_unicos = sorted(set(item["Año"] for item in data_materia_autor), reverse=True)
                 opciones_año = ["Todos"] + [str(a) for a in años_unicos] if años_unicos else ["Todos"]
-                filtro_año = cols[2].selectbox("Año", opciones_año)
+                filtro_año = cols[2].selectbox("Año", opciones_año, disabled=False)
                 data_materia_autor_año = [item for item in data_materia_autor if str(item["Año"]) == filtro_año] if filtro_año != "Todos" else data_materia_autor
                 
                 # Filtro 4: Extensión basado en los datos filtrados hasta el momento.
                 extensiones_unicas = sorted(set(item["Extensión"] for item in data_materia_autor_año))
                 opciones_extension = ["Todos"] + extensiones_unicas if extensiones_unicas else ["Todos"]
-                filtro_extension = cols[3].selectbox("Extensión", opciones_extension)
+                filtro_extension = cols[3].selectbox("Extensión", opciones_extension, disabled=False)
                 
                 data_filtrada = [
                     item for item in data
@@ -142,7 +144,7 @@ def mostrar_controles_filtros(data):
                     and (filtro_extension == "Todos" or item["Extensión"] == filtro_extension)
                 ]
             
-            # Mostrar mensaje de ayuda para la barra de búsqueda (ocultable) justo antes del input.
+            # Barra de búsqueda
             if not st.session_state.hide_search_help:
                 msg_col, close_col = st.columns([0.9, 0.1])
                 with msg_col:
@@ -150,40 +152,92 @@ def mostrar_controles_filtros(data):
                 with close_col:
                     if st.button("✕", key="hide_search_help_button", help="Ocultar mensaje"):
                         st.session_state.hide_search_help = True
+                        st.rerun()
             
-            # Barra de búsqueda (no se agrega un <br> extra para evitar espacios innecesarios)
             query = st.text_input("", "", placeholder="Buscar por título...", key="search_bar", label_visibility="collapsed")
             
-            # Si se ingresa texto en la búsqueda, ajustar la data filtrada
+            # Aplicar búsqueda si hay texto
             if query.strip():
                 data_filtrada = [item for item in data_filtrada if query.lower() in item["Titulo"].lower()]
             
-            # Mostrar los recursos filtrados manteniendo la distribución original (filas de 2 recursos en 4 columnas)
-            if data_filtrada:
-                for i in range(0, len(data_filtrada), 2):
+            # Paginación: Mostrar solo 6 archivos por página
+            archivos_por_pagina = 6
+            total_paginas = (len(data_filtrada) + archivos_por_pagina - 1) // archivos_por_pagina
+            
+            # Asegurarse de que la página actual no exceda el total de páginas
+            if total_paginas > 0 and st.session_state.pagina_actual > total_paginas:
+                st.session_state.pagina_actual = total_paginas
+            elif total_paginas == 0:
+                st.session_state.pagina_actual = 1
+            
+            # Obtener los archivos de la página actual
+            inicio = (st.session_state.pagina_actual - 1) * archivos_por_pagina
+            fin = inicio + archivos_por_pagina
+            archivos_pagina = data_filtrada[inicio:fin]
+            
+            # Mostrar los recursos paginados
+            if archivos_pagina:
+                for i in range(0, len(archivos_pagina), 2):
                     c1, c2, c3, c4 = st.columns(4)
                     # Primer recurso
-                    if i < len(data_filtrada):
-                        recurso1 = data_filtrada[i]
+                    if i < len(archivos_pagina):
+                        recurso1 = archivos_pagina[i]
                         with c1:
                             mostrar_recurso(recurso1)
                         with c2:
+                            if recurso1["Extensión"].lower() == "pdf":
+                                st.markdown(
+                                    f"""
+                                    <a href="app/static/Libros/{recurso1['Titulo']}.pdf" target="_blank">
+                                        <button style="background-color: #007bff; color: white; padding: 10px 20px; 
+                                        border: none; border-radius: 5px; cursor: pointer;">
+                                            Abrir
+                                        </button>
+                                    </a>
+                                    """,
+                                    unsafe_allow_html=True,
+                                )
                             st.write(recurso1["Titulo"])
                             st.write(f"**Autor:** {recurso1['Autor']}")
                             st.write(f"**Año:** {recurso1['Año']}")
                             st.write(f"**Extensión:** {recurso1['Extensión']}")
                     # Segundo recurso
-                    if i + 1 < len(data_filtrada):
-                        recurso2 = data_filtrada[i + 1]
+                    if i + 1 < len(archivos_pagina):
+                        recurso2 = archivos_pagina[i + 1]
                         with c3:
                             mostrar_recurso(recurso2)
                         with c4:
+                            if recurso2["Extensión"].lower() == "pdf":
+                                st.markdown(
+                                    f"""
+                                    <a href="app/static/Libros/{recurso2['Titulo']}.pdf" target="_blank">
+                                        <button style="background-color: #007bff; color: white; padding: 10px 20px; 
+                                        border: none; border-radius: 5px; cursor: pointer;">
+                                            Abrir
+                                        </button>
+                                    </a>
+                                    """,
+                                    unsafe_allow_html=True,
+                                )
                             st.write(recurso2["Titulo"])
                             st.write(f"**Autor:** {recurso2['Autor']}")
                             st.write(f"**Año:** {recurso2['Año']}")
                             st.write(f"**Extensión:** {recurso2['Extensión']}")
             else:
                 st.warning("No hay archivos disponibles con la combinación de filtros y búsqueda seleccionada.")
+            
+            # Mostrar contador de paginación
+            if total_paginas > 0:
+                st.write(f"Página {st.session_state.pagina_actual} de {total_paginas}")
+            else:
+                st.write("No hay páginas disponibles.")
+            
+            # Botones de navegación con disabled
+            col_anteriores, col_siguientes, col_rell = st.columns([1,1,6])
+            with col_anteriores:
+                st.button("Anteriores", disabled=(st.session_state.pagina_actual == 1), on_click=lambda: st.session_state.update(pagina_actual=st.session_state.pagina_actual - 1))
+            with col_siguientes:
+                st.button("Siguientes", disabled=(st.session_state.pagina_actual == total_paginas), on_click=lambda: st.session_state.update(pagina_actual=st.session_state.pagina_actual + 1))
             
             return filtro_materia, filtro_autor, filtro_año, filtro_extension, query
 
