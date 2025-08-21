@@ -2,6 +2,7 @@ import streamlit as st
 from PIL import Image
 from modules.data_loader import cargar_datos
 from modules.utils import mostrar_recurso
+from modules.utils import Ayuda as Ayuda
 
 st.set_page_config(page_title="Repositorio - UNACH", page_icon="Files/Logo.svg", layout="wide")
 
@@ -23,7 +24,7 @@ st.markdown(
         font-size: 0.9rem;
         color: #333;
         animation: fadeIn 1.5s ease-in-out;
-        margin-bottom: 10px;
+        margin-bottom: 0px;
     }
     @keyframes fadeIn {
         from { opacity: 0; }
@@ -61,7 +62,9 @@ def mostrar_encabezado():
                 unsafe_allow_html=True
             )
         with col3:
-            st.image("Files/Logo.svg", use_container_width=True)
+            st.markdown(f"""
+                <img src="app/static/Logo2.png" alt="Logo" style="display: block; margin-left: auto; margin-right: auto; width: 100%;">
+            """, unsafe_allow_html=True)    
         with col1:
             if st.button("⬅ Home", use_container_width=False):
                 st.switch_page("pages/Navegación.py")
@@ -77,7 +80,7 @@ def mostrar_controles_filtros(data):
         st.session_state.hide_materia_help = False
     if "hide_search_help" not in st.session_state:
         st.session_state.hide_search_help = False
-    if 'pagina_actual' not in st.session_state:
+    if 'pagina_actual' not in st.session_state: 
         st.session_state.pagina_actual = 1
     
     with st.container():
@@ -94,7 +97,8 @@ def mostrar_controles_filtros(data):
         
         # Columna derecha: Filtros y barra de búsqueda.
         with col1:
-            # Mostrar la fila de filtros en 4 columnas.
+            st.write("-----")
+            # Mostrar la fila de filtros en 4 columnas
             cols = st.columns(4)
             # Filtro 1: Materia (obligatorio)
             materias = sorted(set(item["Materia"] for item in data))
@@ -109,13 +113,15 @@ def mostrar_controles_filtros(data):
                 data_filtrada = data
                 # Mostrar mensaje de ayuda para elegir materia (si no se ha ocultado)
                 if not st.session_state.hide_materia_help:
-                    msg_col, close_col = st.columns([0.9, 0.1])
-                    with msg_col:
-                        st.markdown('<div class="help-message">Primero tienes que elegir la etiqueta materia para que las demás etiquetas se activen.</div>', unsafe_allow_html=True)
-                    with close_col:
-                        if st.button("✕", key="hide_materia_help_button", help="Ocultar mensaje"):
-                            st.session_state.hide_materia_help = True
-                            st.rerun()
+                #     msg_col,col_mid, close_col = st.columns([0.5,1,0.5 ])
+                #     # with msg_col:
+                #     #     st.markdown('<div class="help-message">Estos son los filtros. Primero tienes que elegir la etiqueta materia para que las demás etiquetas se activen.</div>', unsafe_allow_html=True)
+                #     with col_mid:
+                    if st.button("Estos son los filtros, primero elige tu materia. ✕ ", key="hide_materia_help_button", use_container_width=True):
+                        st.session_state.hide_materia_help = True
+                        st.rerun()
+                st.markdown(Ayuda, unsafe_allow_html=True) #el css de los botones
+
             else:
                 # Si se selecciona una materia específica, se filtra la data y se habilitan los filtros
                 data_materia = [item for item in data if item["Materia"] == filtro_materia]
@@ -144,22 +150,19 @@ def mostrar_controles_filtros(data):
                     and (filtro_extension == "Todos" or item["Extensión"] == filtro_extension)
                 ]
             
-            # Barra de búsqueda
-            if not st.session_state.hide_search_help:
-                msg_col, close_col = st.columns([0.9, 0.1])
-                with msg_col:
-                    st.markdown('<div class="help-message">Aquí puedes buscar archivos por título.</div>', unsafe_allow_html=True)
-                with close_col:
-                    if st.button("✕", key="hide_search_help_button", help="Ocultar mensaje"):
-                        st.session_state.hide_search_help = True
-                        st.rerun()
+
             
             query = st.text_input("", "", placeholder="Buscar por título...", key="search_bar", label_visibility="collapsed")
             
             # Aplicar búsqueda si hay texto
             if query.strip():
                 data_filtrada = [item for item in data_filtrada if query.lower() in item["Titulo"].lower()]
-            
+            # Barra de búsqueda
+            if not st.session_state.hide_search_help:
+                if st.button("Busca tu recurso ingresando el titulo. ✕ ", key="hide_search_help_button", use_container_width=True):
+                    st.session_state.hide_search_help = True
+                    st.rerun()
+
             # Paginación: Mostrar solo 6 archivos por página
             archivos_por_pagina = 6
             total_paginas = (len(data_filtrada) + archivos_por_pagina - 1) // archivos_por_pagina
@@ -201,6 +204,7 @@ def mostrar_controles_filtros(data):
                             st.write(f"**Autor:** {recurso1['Autor']}")
                             st.write(f"**Año:** {recurso1['Año']}")
                             st.write(f"**Extensión:** {recurso1['Extensión']}")
+                            st.write("-------")
                     # Segundo recurso
                     if i + 1 < len(archivos_pagina):
                         recurso2 = archivos_pagina[i + 1]
@@ -223,6 +227,8 @@ def mostrar_controles_filtros(data):
                             st.write(f"**Autor:** {recurso2['Autor']}")
                             st.write(f"**Año:** {recurso2['Año']}")
                             st.write(f"**Extensión:** {recurso2['Extensión']}")
+                            st.write("-------")
+
             else:
                 st.warning("No hay archivos disponibles con la combinación de filtros y búsqueda seleccionada.")
             

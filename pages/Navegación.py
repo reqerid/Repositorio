@@ -2,10 +2,16 @@ import streamlit as st
 import json
 from PIL import Image
 import fitz  # PyMuPDF
+from modules.utils import Ayuda as Ayuda
 
 st.set_page_config(page_title="Repositorio - UNACH", page_icon="Files/Logo.svg", layout="centered")
 
+
+
+
+
 # Inyectar CSS global para el icono de lupa y los mensajes de ayuda
+# Inyectar CSS global para el icono de lupa, los mensajes de ayuda y el logo
 st.markdown(
     """
     <style>
@@ -29,10 +35,20 @@ st.markdown(
         from { opacity: 0; }
         to { opacity: 1; }
     }
+    /* Estilos para el logo */
+    .logo-container img {
+        max-width: 200px; /* Tamaño máximo del logo */
+        max-height: 100px; /* Altura máxima del logo */
+        width: 100%; /* Ajuste proporcional al contenedor */
+        height: auto; /* Mantiene la proporción */
+        display: block;
+        margin: 0 auto; /* Centra el logo horizontalmente */
+    }
     </style>
     """,
     unsafe_allow_html=True
 )
+
 
 def menu_principal():
     # Leer el archivo JSON
@@ -54,11 +70,20 @@ def menu_principal():
             return None
 
     # Mostrar logo centrado
+    # Mostrar logo centrado
+
+    # Inyectar CSS personalizado
+
+# Mostrar logo centrado
     placeholder = st.empty()
     with placeholder.container():
         col1, col2, col3 = st.columns([1, 1, 1])
         with col2:
-            st.image("Files/Logo.svg", use_container_width=True)
+
+            st.markdown(f"""
+                <img src="app/static/Logo2.png" alt="Logo" style="display: block; margin-left: auto; margin-right: auto; width: 100%;">
+            """, unsafe_allow_html=True)
+            # st.image("Files/Logo.svg", use_container_width=False, width= 150)  # Desactiva el uso del ancho completo del contenedor
 
     # Inicializar variables de sesión para los mensajes de ayuda
     if "hide_search_help" not in st.session_state:
@@ -75,12 +100,8 @@ def menu_principal():
         if not st.session_state.hide_search_help:
             col_msg, col_close = st.columns([0.9, 0.1])
             with col_msg:
-                st.markdown(
-                    '<div class="help-message">Aquí puedes realizar la búsqueda de tus archivos en el repositorio ingresando el título.</div>',
-                    unsafe_allow_html=True
-                )
-            with col_close:
-                if st.button("✕", key="hide_search_help_button", help="Ocultar mensaje"):
+                st.markdown(Ayuda, unsafe_allow_html=True)
+                if st.button("Busca tu recurso ingresando el titulo. ✕ ", key="hide_search_help_button"):
                     st.session_state.hide_search_help = True
                     st.rerun()
 
@@ -92,7 +113,23 @@ def menu_principal():
             key="search_bar",
             label_visibility="collapsed"
         )
-        
+    # Contenedor para el botón "Todo" y mensaje de ayuda
+    buttonHolder = st.empty()
+    with buttonHolder.container():
+        col1, col2, col3 = st.columns([1, 0.5, 1])
+        with col2:
+            st.markdown("<br>", unsafe_allow_html=True)
+            if st.button("INGRESAR", use_container_width=True, help="Ver todos los recursos del instituto"):
+                st.switch_page("pages/PIndexado.py")
+        with col3:
+            if not st.session_state.hide_button_help:
+                col_msg, col_close = st.columns([0.9, 0.1])
+                with col_msg:
+                    st.markdown(Ayuda, unsafe_allow_html=True)
+                    if st.button("Ver toda la biblioteca. ✕ ", key="hide_button_help_button"):
+                        st.session_state.hide_button_help = True
+                        st.rerun()
+
         if queryDeBusqueda.strip():
             DatosFiltrados = [
                 item for item in DatosFiltrados
@@ -148,6 +185,8 @@ def menu_principal():
                             st.write(f"**Año:** {recurso1['Año']}")
                             st.write(f"**Extensión:** {recurso1['Extensión']}")
                             st.write(" ")
+                            st.write("-------")
+
 
                     # Segundo recurso
                     if i + 1 < len(DatosFiltrados):
@@ -192,26 +231,9 @@ def menu_principal():
                             st.write(f"**Año:** {recurso2['Año']}")
                             st.write(f"**Extensión:** {recurso2['Extensión']}")
                             st.write(" ")
+                            st.write("-------")
 
-    # Contenedor para el botón "Todo" y mensaje de ayuda
-    buttonHolder = st.empty()
-    with buttonHolder.container():
-        col1, col2, col3 = st.columns([1, 0.5, 1])
-        with col2:
-            st.markdown("<br>", unsafe_allow_html=True)
-            if st.button("Todo", use_container_width=True, help="Ver la base de datos completa"):
-                st.switch_page("pages/PIndexado.py")
-        with col3:
-            if not st.session_state.hide_button_help:
-                col_msg, col_close = st.columns([0.9, 0.1])
-                with col_msg:
-                    st.markdown(
-                        '<div class="help-message">O si lo prefieres, puedes ver todo nuestro repositorio completo dando click.</div>',
-                        unsafe_allow_html=True
-                    )
-                with col_close:
-                    if st.button("✕", key="hide_button_help_button", help="Ocultar mensaje"):
-                        st.session_state.hide_button_help = True
-                        st.rerun()
+
+
 
 menu_principal()

@@ -3,6 +3,42 @@ import fitz
 from PIL import Image
 import streamlit as st
 
+
+#estilos para el botón de ayuda#
+Ayuda ="""
+    <style>
+    div.stButton > button {
+        background-color: #F7F7F7; /* Gris claro para minimalismo */
+        color: #2D3748; /* Gris azulado oscuro para contraste */
+        border: none; /* Sin bordes para look limpio */
+        border-radius: 8px; /* Bordes ligeramente redondeados */
+        padding: 8px 16px; /* Padding compacto */
+        font-size: 14px; /* Fuente pequeña y elegante */
+        font-weight: 400; /* Peso ligero */
+        font-family: 'Arial', sans-serif; /* Fuente moderna */
+        box-shadow: 0 0 10px rgba(226, 232, 240, 0.5); /* Sombra inicial */
+        animation: pulse 2s infinite ease-in-out; /* Animación en bucle */
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    div.stButton > button:hover {
+        background-color: #E2E8F0; /* Gris más claro al hover */
+        transform: scale(1.05); /* Ligeramente más grande */
+    }
+    @keyframes pulse {
+        0% {
+            box-shadow: 0 0 10px rgba(226, 232, 240, 0.5);
+        }
+        50% {
+            box-shadow: 0 0 20px rgba(226, 232, 240, 0.8);
+        }
+        100% {
+            box-shadow: 0 0 10px rgba(226, 232, 240, 0.5);
+        }
+    }
+    </style>
+    """
+
 def renderizar_caratula(ruta_pdf):
     """
     Renderiza la portada de un PDF.
